@@ -34,34 +34,40 @@ def set_background(image_path):
 
 # --- Home Page ---
 if page == "Home":
-    set_background("default.avif")  # Set your default home background
+    set_background("default.avif")
     st.title("Sri Lanka Agriculture & Rural Dashboard")
-    st.write("Welcome! Use the sidebar to navigate.")
+    st.write("Welcome! Use the sidebar to navigate through the dashboard.")
 
 # --- Agriculture Page ---
 elif page == "Agriculture":
     set_background("image 4.avif")
-    st.title("Agriculture Insights")
+    st.title("🌾 Agriculture Insights")
     agri_data = data[data["Indicator Code"].str.contains("AG|ER", case=False, na=False)]
 
     if st.checkbox("Show Raw Agriculture Data"):
         st.dataframe(agri_data)
 
-    # --- Line Chart ---
-    st.subheader("📈 Line Chart")
+    # --- Single Line Chart with Year Filter ---
+    st.subheader("📈 Agriculture Indicator Over Time")
     indicators = agri_data["Indicator Name"].unique()
     selected_indicator = st.selectbox("Select an Indicator", indicators)
     filtered_df = agri_data[agri_data["Indicator Name"] == selected_indicator]
 
+    years = filtered_df["Year"].dropna().unique()
+    min_year, max_year = int(years.min()), int(years.max())
+    year_range = st.slider("Select Year Range", min_value=min_year, max_value=max_year, value=(min_year, max_year))
+
+    range_df = filtered_df[(filtered_df["Year"] >= year_range[0]) & (filtered_df["Year"] <= year_range[1])]
+
     fig, ax = plt.subplots(figsize=(13, 5))
-    ax.plot(filtered_df["Year"], filtered_df["Value"], color="cyan", marker="o", linewidth=2)
-    ax.set_title(f"{selected_indicator}", fontsize=16, color='white')
+    ax.plot(range_df["Year"], range_df["Value"], color="lime", marker="o", linewidth=2)
+    ax.set_title(f"{selected_indicator} (Years: {year_range[0]} - {year_range[1]})", fontsize=16, color='white')
     ax.set_xlabel("Year", fontsize=12, color='white')
     ax.set_ylabel("Value", fontsize=12, color='white')
     ax.grid(True, linestyle='--', alpha=0.4)
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
-    fig.patch.set_facecolor('#0E1117')  
+    fig.patch.set_facecolor('#0E1117')
     ax.set_facecolor('#0E1117')
     st.pyplot(fig)
 
@@ -85,29 +91,34 @@ elif page == "Agriculture":
 
 # --- Rural Development Page ---
 elif page == "Rural Development":
-    set_background("image 6.avif")  # Your rural image
+    set_background("image 6.avif")
     st.title("🏡 Rural Development Insights")
     rural_data = data[data["Indicator Code"].str.contains("EG|EN|RUR", case=False, na=False)]
-
 
     if st.checkbox("Show Raw Rural Data"):
         st.dataframe(rural_data)
 
-    # --- Line Chart ---
-    st.subheader("📈 Line Chart")
+    # --- Single Line Chart with Year Filter ---
+    st.subheader("📈 Rural Indicator Over Time")
     indicators = rural_data["Indicator Name"].unique()
     selected_indicator = st.selectbox("Select an Indicator", indicators)
     filtered_df = rural_data[rural_data["Indicator Name"] == selected_indicator]
 
+    years = filtered_df["Year"].dropna().unique()
+    min_year, max_year = int(years.min()), int(years.max())
+    year_range = st.slider("Select Year Range", min_value=min_year, max_value=max_year, value=(min_year, max_year))
+
+    range_df = filtered_df[(filtered_df["Year"] >= year_range[0]) & (filtered_df["Year"] <= year_range[1])]
+
     fig, ax = plt.subplots(figsize=(13, 5))
-    ax.plot(filtered_df["Year"], filtered_df["Value"], color="cyan", marker="o", linewidth=2)
-    ax.set_title(f"{selected_indicator}", fontsize=16, color='white')
+    ax.plot(range_df["Year"], range_df["Value"], color="orange", marker="o", linewidth=2)
+    ax.set_title(f"{selected_indicator} (Years: {year_range[0]} - {year_range[1]})", fontsize=16, color='white')
     ax.set_xlabel("Year", fontsize=12, color='white')
     ax.set_ylabel("Value", fontsize=12, color='white')
     ax.grid(True, linestyle='--', alpha=0.4)
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
-    fig.patch.set_facecolor('#0E1117')  
+    fig.patch.set_facecolor('#0E1117')
     ax.set_facecolor('#0E1117')
     st.pyplot(fig)
 
@@ -128,6 +139,8 @@ elif page == "Rural Development":
         st.pyplot(fig)
     else:
         st.info("Please select at least one indicator.")
+
+
 
 
 
