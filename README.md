@@ -3,6 +3,8 @@
 
 An interactive Streamlit-based web dashboard for visualizing trends and patterns in Sri Lanka’s agriculture and rural development sectors. This dashboard empowers policymakers, researchers, and the general public with meaningful insights using dynamic charts, filters, and predictive analysis.
 
+---
+
 ## Features
 
 - **Overview Page**
