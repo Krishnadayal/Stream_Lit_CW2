@@ -161,16 +161,17 @@ page = st.sidebar.radio("Go to", ["Overview", "Agriculture", "Rural Development"
 if page == "Overview":
     set_background("sri_lanka.jpg")
     st.title("Sri Lanka Agriculture & Rural Development Dashboard")
-    st.markdown("### :bar_chart: Dataset Summary")
-    st.markdown("This dataset contains **1691 rows** and **4 columns**, from Sri Lanka’s Department of Census and Statistics.")
-    st.markdown("### :page_facing_up: Column Descriptions\n- Year\n- Indicator Name\n- Indicator Code\n- Value")
+    st.markdown("### Overview")
+    st.markdown("The Sri Lanka Agriculture & Rural Development Dashboard is a comprehensive and interactive platform designed to explore key indicators related to the country’s agricultural performance and rural development progress. Developed using data published by the Department of Census and Statistics of Sri Lanka, along with global indicators compiled by the Food and Agriculture Organization of the United Nations, this tool provides valuable insights about agricultural and rural development trends across multiple years.")
+    st.markdown("Agriculture and rural development are of critical importance to Sri Lanka’s economy and social well-being. For the 70% of the world's poor who live in rural areas, agriculture remains the main source of income and employment. However, challenges such as land degradation, resource depletion, and water scarcity threaten long-term sustainability. Strengthening rural development not only enhances food security and economic resilience but also plays a vital role in achieving the United Nations Sustainable Development Goals, particularly those related to poverty reduction, hunger, and inclusive growth.")
+    st.markdown("### :page_facing_up: Column Descriptions\n- **Year**: The year the data was recorded.\n- **Indicator Name**: The name of the indicator. \n- **Indicator Code**: A unique identifier for each indicator.\n- **Value**: The numeric value of the indicator for the given year.")
 
-    search_keyword = st.sidebar.text_input(":mag: Search Indicator").strip().lower()
+    search_keyword = st.sidebar.text_input("Search indicator").strip().lower()
     all_indicators = sorted(data["Indicator Name"].unique())
-    selected_indicator = st.sidebar.selectbox(":clipboard: Select Indicator", ["All"] + all_indicators)
+    selected_indicator = st.sidebar.selectbox("Select indicator", ["All"] + all_indicators)
     years = data["Year"].dropna().unique()
     min_year, max_year = int(years.min()), int(years.max())
-    year_range = st.sidebar.slider(":calendar: Select Year Range", min_year, max_year, (min_year, max_year))
+    year_range = st.sidebar.slider("Select year range", min_year, max_year, (min_year, max_year))
     filtered_data = data[(data["Year"] >= year_range[0]) & (data["Year"] <= year_range[1])]
     if selected_indicator != "All":
         filtered_data = filtered_data[filtered_data["Indicator Name"] == selected_indicator]
@@ -185,7 +186,7 @@ elif page == "Agriculture":
     set_background("agriculture.png")
     st.title(":ear_of_rice: Agriculture Insights")
     agri_data = data[data["Indicator Code"].str.contains("AG|ER", case = False, na = False)]
-    if st.checkbox("Show Agriculture Data"):
+    if st.checkbox(":open_file_folder: Show Agriculture Dataset"):
         st.dataframe(agri_data)
     render_dashboard(agri_data, "agri", color = "lime")
 
@@ -193,9 +194,31 @@ elif page == "Rural Development":
     set_background("rural.jpg")
     st.title(":house: Rural Development Insights")
     rural_data = data[data["Indicator Code"].str.contains("EG|EN|RUR", case = False, na = False)]
-    if st.checkbox("Show Rural Data"):
+    if st.checkbox(":open_file_folder: Show Rural Dataset"):
         st.dataframe(rural_data)
     render_dashboard(rural_data, "rural", color = "gold")
+
+# Footer 
+st.markdown("""
+    <style>
+    .custom-footer {
+        position: fixed;
+        bottom: 20px;
+        right: 25px;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        color: white;
+        z-index: 9999;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    </style>
+    <div class="custom-footer">
+        <strong>Krishnadayal</strong>
+    </div>
+""", unsafe_allow_html=True)
+
 
 
 
