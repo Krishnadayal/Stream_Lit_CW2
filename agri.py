@@ -159,7 +159,7 @@ def render_dashboard(filtered_data, name_prefix, color):
 page = st.sidebar.radio("Go to", ["Overview", "Agriculture", "Rural Development"])
 
 if page == "Overview":
-    set_background("image 1.png")
+    set_background("sri_lanka.jpg")
     st.title("Sri Lanka Agriculture & Rural Development Dashboard")
     st.markdown("### :bar_chart: Dataset Summary")
     st.markdown("This dataset contains **1691 rows** and **4 columns**, from Sri Lanka’s Department of Census and Statistics.")
@@ -182,7 +182,7 @@ if page == "Overview":
         st.markdown(f"**:1234: Total Rows: {len(filtered_data)}**")
 
 elif page == "Agriculture":
-    set_background("image 4.png")
+    set_background("agriculture.png")
     st.title(":ear_of_rice: Agriculture Insights")
     agri_data = data[data["Indicator Code"].str.contains("AG|ER", case = False, na = False)]
     if st.checkbox("Show Agriculture Data"):
@@ -190,7 +190,7 @@ elif page == "Agriculture":
     render_dashboard(agri_data, "agri", color = "lime")
 
 elif page == "Rural Development":
-    set_background("image 6.avif")
+    set_background("rural.jpg")
     st.title(":house: Rural Development Insights")
     rural_data = data[data["Indicator Code"].str.contains("EG|EN|RUR", case = False, na = False)]
     if st.checkbox("Show Rural Data"):
