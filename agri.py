@@ -1,18 +1,17 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import base64
 import plotly.express as px
 import plotly.graph_objects as go
-import base64
 from sklearn.linear_model import LinearRegression
-import numpy as np
 
-# Setup Streamlit page
+# Streamlit page
 st.set_page_config(page_title = "Sri Lanka Dashboard", layout = "wide", initial_sidebar_state = "expanded")
 
-# Load CSV data
 data = pd.read_csv("agriculture_and_rural.csv")
 
-# Helper functions
+# Background Image
 def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
@@ -22,7 +21,7 @@ def set_background(image_path):
     st.markdown(f"""
         <style>
         .stApp {{
-            background-image: url("data:image/avif;base64,{base64_img}");
+            background-image: url("data:image/jpg;base64,{base64_img}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -46,7 +45,6 @@ def set_background(image_path):
         </style>
     """, unsafe_allow_html=True)
 
-# Dashboard Renderer
 def render_dashboard(filtered_data, name_prefix, color):
     indicators = filtered_data["Indicator Name"].unique()
     selected_indicator = st.sidebar.selectbox("Select one indicator for line & bar chart", indicators, key = f"{name_prefix}_line")
@@ -60,7 +58,7 @@ def render_dashboard(filtered_data, name_prefix, color):
     selected_area_indicators = st.sidebar.multiselect("Select indicators for area chart", indicators, default = indicators[:2], key = f"{name_prefix}_area")
     scatter_selection = st.sidebar.multiselect("Select 2 indicators for scatter plot", indicators, default = indicators[:2], key = f"{name_prefix}_scatter")
 
-    # Line and Bar Charts
+# Line and Bar Charts
     col1, _, col2 = st.columns([1, 0.05, 1])
     with col1:
         st.markdown("#### :chart_with_upwards_trend: Line Chart")
@@ -88,7 +86,7 @@ def render_dashboard(filtered_data, name_prefix, color):
         )
         st.plotly_chart(fig, use_container_width = True)
 
-    # Area and Scatter Charts
+# Area and Scatter Charts
     col3, _, col4 = st.columns([1, 0.05, 1])
     with col3:
         st.markdown("#### :herb: Area Chart")
@@ -132,8 +130,8 @@ def render_dashboard(filtered_data, name_prefix, color):
         else:
             st.info("Please select exactly 2 indicators.")
 
-    # Prediction Table
-    st.markdown("### :crystal_ball: One-Year Ahead Prediction Table")
+# Prediction Table
+    st.markdown("### :crystal_ball: Prediction Table")
     prediction_results = []
     for indicator in filtered_data["Indicator Name"].unique():
         sub_df = filtered_data[filtered_data["Indicator Name"] == indicator].dropna(subset = ["Year", "Value"])
@@ -184,7 +182,7 @@ if page == "Overview":
         st.markdown(f"**:1234: Total Rows: {len(filtered_data)}**")
 
 elif page == "Agriculture":
-    set_background("image 4.avif")
+    set_background("image 4.png")
     st.title(":ear_of_rice: Agriculture Insights")
     agri_data = data[data["Indicator Code"].str.contains("AG|ER", case = False, na = False)]
     if st.checkbox("Show Agriculture Data"):
