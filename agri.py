@@ -183,7 +183,7 @@ if page == "Overview":
         st.markdown(f"**:1234: Total Rows: {len(filtered_data)}**")
 
 elif page == "Agriculture":
-    set_background("agriculture.png")
+    set_background("agriculture.jpg")
     st.title(":ear_of_rice: Agriculture Insights")
     agri_data = data[data["Indicator Code"].str.contains("AG|ER", case = False, na = False)]
     if st.checkbox(":open_file_folder: Show Agriculture Dataset"):
@@ -217,7 +217,7 @@ st.markdown("""
     <div class="custom-footer">
         <strong>Krishnadayal</strong>
     </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html = True)
 
 
 
