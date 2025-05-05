@@ -164,7 +164,7 @@ if page == "Overview":
     st.markdown("### Overview")
     st.markdown("The Sri Lanka Agriculture & Rural Development Dashboard is a comprehensive and interactive platform designed to explore key indicators related to the country’s agricultural performance and rural development progress. Developed using data published by the Humanitarian Data Exchange (HDX), along with global indicators compiled by the Food and Agriculture Organization of the United Nations, this tool provides valuable insights about agricultural and rural development trends across multiple years.")
     st.markdown("Agriculture and rural development are of critical importance to Sri Lanka’s economy and social well-being. The 70% of the world's poor who live in rural areas, agriculture remains the main source of income and employment. However, challenges such as land degradation, resource depletion, and water scarcity threaten long-term sustainability. Strengthening rural development not only enhances food security and economic resilience but also plays a vital role in achieving the United Nations Sustainable Development Goals, particularly those related to poverty reduction, hunger, and inclusive growth.")
-    st.markdown("### :page_facing_up: Column Descriptions\n- **Year**: The year the data was recorded.\n- **Indicator Name**: The name of the indicator. \n- **Indicator Code**: A unique identifier for each indicator.\n- **Value**: The numeric value of the indicator for the given year.")
+    st.markdown("### Column Descriptions\n- **Year**: The year the data was recorded.\n- **Indicator Name**: The name of the indicator. \n- **Indicator Code**: A unique identifier for each indicator.\n- **Value**: The numeric value of the indicator for the given year.")
 
     search_keyword = st.sidebar.text_input("Search indicator").strip().lower()
     all_indicators = sorted(data["Indicator Name"].unique())
@@ -178,7 +178,7 @@ if page == "Overview":
     if search_keyword:
         filtered_data = filtered_data[filtered_data["Indicator Name"].str.lower().str.contains(search_keyword)]
 
-    if st.checkbox(":open_file_folder: Show Filtered Dataset"):
+    if st.checkbox(":open_file_folder: **Show Filtered Dataset**"):
         st.dataframe(filtered_data)
         st.markdown(f"**:1234: Total Rows: {len(filtered_data)}**")
 
@@ -186,7 +186,7 @@ elif page == "Agriculture":
     set_background("agriculture.jpg")
     st.title(":ear_of_rice: Agriculture Insights")
     agri_data = data[data["Indicator Code"].str.contains("AG|ER", case = False, na = False)]
-    if st.checkbox(":open_file_folder: Show Agriculture Dataset"):
+    if st.checkbox(":open_file_folder: **Show Agriculture Dataset**"):
         st.dataframe(agri_data)
     render_dashboard(agri_data, "agri", color = "lime")
 
@@ -194,7 +194,7 @@ elif page == "Rural Development":
     set_background("rural.jpg")
     st.title(":house: Rural Development Insights")
     rural_data = data[data["Indicator Code"].str.contains("EG|EN|RUR", case = False, na = False)]
-    if st.checkbox(":open_file_folder: Show Rural Dataset"):
+    if st.checkbox(":open_file_folder: **Show Rural Dataset**"):
         st.dataframe(rural_data)
     render_dashboard(rural_data, "rural", color = "gold")
 
