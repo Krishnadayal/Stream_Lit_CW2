@@ -6,12 +6,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.linear_model import LinearRegression
 
-# Streamlit page
 st.set_page_config(page_title = "Sri Lanka Dashboard", layout = "wide", initial_sidebar_state = "expanded")
 
 data = pd.read_csv("agriculture_and_rural.csv")
 
-# Background Image
+# Background image
 def get_base64(file_path):
     with open(file_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
@@ -47,16 +46,21 @@ def set_background(image_path):
 
 def render_dashboard(filtered_data, name_prefix, color):
     indicators = filtered_data["Indicator Name"].unique()
-    selected_indicator = st.sidebar.selectbox("Select one indicator for line & bar chart", indicators, key = f"{name_prefix}_line")
+
+    st.sidebar.subheader("Line & Bar Chart Filters")
+    selected_indicator = st.sidebar.selectbox("Select One Indicator", indicators, key = f"{name_prefix}_line")
     filtered_df = filtered_data[filtered_data["Indicator Name"] == selected_indicator]
 
     years = filtered_df["Year"].dropna().unique()
     min_year, max_year = int(years.min()), int(years.max())
-    year_range = st.sidebar.slider("Select year range", min_year, max_year, (min_year, max_year), key = f"{name_prefix}_year")
+    year_range = st.sidebar.slider("Select Year Range", min_year, max_year, (min_year, max_year), key = f"{name_prefix}_year")
     range_df = filtered_df[(filtered_df["Year"] >= year_range[0]) & (filtered_df["Year"] <= year_range[1])]
+     
+    st.sidebar.subheader("Area Chart Filters")
+    selected_area_indicators = st.sidebar.multiselect("Select Indicators", indicators, default = indicators[:2], key = f"{name_prefix}_area")
 
-    selected_area_indicators = st.sidebar.multiselect("Select indicators for area chart", indicators, default = indicators[:2], key = f"{name_prefix}_area")
-    scatter_selection = st.sidebar.multiselect("Select 2 indicators for scatter plot", indicators, default = indicators[:2], key = f"{name_prefix}_scatter")
+    st.sidebar.subheader("Scatter Plot Filters")
+    scatter_selection = st.sidebar.multiselect("Select Two Indicators", indicators, default = indicators[:2], key = f"{name_prefix}_scatter")
 
 # Line and Bar Charts
     col1, _, col2 = st.columns([1, 0.05, 1])
@@ -155,8 +159,8 @@ def render_dashboard(filtered_data, name_prefix, color):
     else:
         st.warning("Not enough data to generate predictions.")
 
-# Page Navigation
-page = st.sidebar.radio("Go to", ["Overview", "Agriculture", "Rural Development"])
+# Page navigation
+page = st.sidebar.radio("**Go to**", ["Overview", "Agriculture", "Rural Development"])
 
 if page == "Overview":
     set_background("sri_lanka.jpg")
@@ -165,13 +169,14 @@ if page == "Overview":
     st.markdown("The Sri Lanka Agriculture & Rural Development Dashboard is a comprehensive and interactive platform designed to explore key indicators related to the country’s agricultural performance and rural development progress. Developed using data published by the Humanitarian Data Exchange (HDX), along with global indicators compiled by the Food and Agriculture Organization of the United Nations, this tool provides valuable insights about agricultural and rural development trends across multiple years.")
     st.markdown("Agriculture and rural development are of critical importance to Sri Lanka’s economy and social well-being. The 70% of the world's poor who live in rural areas, agriculture remains the main source of income and employment. However, challenges such as land degradation, resource depletion, and water scarcity threaten long-term sustainability. Strengthening rural development not only enhances food security and economic resilience but also plays a vital role in achieving the United Nations Sustainable Development Goals, particularly those related to poverty reduction, hunger, and inclusive growth.")
     st.markdown("### Column Descriptions\n- **Year**: The year the data was recorded.\n- **Indicator Name**: The name of the indicator. \n- **Indicator Code**: A unique identifier for each indicator.\n- **Value**: The numeric value of the indicator for the given year.")
-
-    search_keyword = st.sidebar.text_input("Search indicator").strip().lower()
+    
+    st.sidebar.subheader("Filters")
+    search_keyword = st.sidebar.text_input("Search Indicator").strip().lower()
     all_indicators = sorted(data["Indicator Name"].unique())
-    selected_indicator = st.sidebar.selectbox("Select indicator", ["All"] + all_indicators)
+    selected_indicator = st.sidebar.selectbox("Select Indicator", ["All"] + all_indicators)
     years = data["Year"].dropna().unique()
     min_year, max_year = int(years.min()), int(years.max())
-    year_range = st.sidebar.slider("Select year range", min_year, max_year, (min_year, max_year))
+    year_range = st.sidebar.slider("Select Year Range", min_year, max_year, (min_year, max_year))
     filtered_data = data[(data["Year"] >= year_range[0]) & (data["Year"] <= year_range[1])]
     if selected_indicator != "All":
         filtered_data = filtered_data[filtered_data["Indicator Name"] == selected_indicator]
@@ -218,6 +223,9 @@ st.markdown("""
         <strong>Krishnadayal</strong>
     </div>
 """, unsafe_allow_html = True)
+
+
+
 
 
 
